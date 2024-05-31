@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <!--  Meta Tags -->
+  <meta charset="UTF-8" />
+  <meta name="author"content="Mohamed Farah">
+  <meta name="description"content="This a web based mobile app development using using vue js and css frameworks">
+  <meta name="viewport"content="width=device-width, initial-scale=1.0" />
+  <title>Web Development Bootcamp Courses</title>
+   <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="assets/mdbootstrap.7.1.0/mdb.css">
+  <!-- Font Awesome CSS -->
+  <link rel="stylesheet" href="assets/fontawesome.6.5.1/css/all.css" /> 
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/brands.min.css">
+  <!-- Custom CSS link to the index.html -->
+  <link rel="stylesheet" href="assets/main.css" />
+  <!-- Custom link CDN vue js -->
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+ 
+  
+</head>
+<body>
+  <!-- Navigation bar -->
+      <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+        <h2 class="navbar-title hover-color">Afterschool Activity App</h2>
+    </div>
+  </nav>
+  
+  <!-- Main content -->
+  <main id="app" v-cloak>
+  <!--   v-cloak is directive provided by the Vue Js to hide uncompiled elements mustache bindings
+    ('{{}}') -->
+
+    <div class="my-6 container"> <!-- is bootstrap utility class that adds margin top and bottom of the element -->
+      <!--  This is the Courses Page -->
+      <div v-if="showLessons"> <!-- is a conditional directive provided by VueJs Framework, its used to conditionally render or remove a block of html elements based on truthfuliness of the expression it evaluates -->
+        <h1 class="heading" style="text-align: center;">Courses</h1>
+        <div class="d-flex flex-wrap flex-md-nowrap gap-3">
+          <!-- the Search Bar and sort bar-->
+          <div class="input-group input-group-lg rounded-4 shadow-sm">
+            <span class="input-group-text border-0 bg-white">  <!-- This is search icon -->
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </span>
+           <!--  search input field -->
+            <input v-model="search" id="search" class="form-control border-0" type="text" placeholder="Search your favorite courses"
+                autocomplete="on" v-on:input="searchLessons" />
+                <!-- The v-model is used for two-way data binding btwn form input elements and vue instance -->
+                <!-- form input button -->
+        </div>
+
+          <!-- Sort Bar -->
+          <div class="d-flex gap-3 w-100">
+            <div class="input-group input-group-lg border rounded-4 overflow-hidden">
+              <label class="input-group-text border-0 bn5" for="sortBy">Sort by:</label>
+              <select v-model="sortBy" id="sortBy" class="form-select border-0 rounded-0" v-on:change="searchLessons">
+                <!-- sort dropdown -->
+                <option value="subject">Subject</option>
+                <option value="location">Location</option>
+                <option value="price">Price</option>
+                <option value="spaces">Spaces</option>
+                <option value="rating">Rating</option>
+              </select>
+            </div>
+
+            <!-- Ascending and descending order -->
+            <button @click="toggleSortOrder" class=" bn5 btn btn-md btn-primary rounded-6" data-mdb-ripple-init>
+             <!--  the @click is a attribute in vue.js directive that listens for a click event on html element  -->
+              <!-- the v-if and v-else is a conditional statement used to check whether a certain condition is true or check the other conditions -->
+              <span v-if="sortOrderAsc">Ascending <i class="fas fa-arrow-up"></i></span>
+              <span v-else>Descending <i class="fas fa-arrow-down"></i></span>
+          </button>
+          </div>
+        </div>
+
+        <!-- List of courses and lessons -->
+        <section class="mt-4 row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+          <div v-for="lesson in lessons" class="col">
+            <!-- the v-for creates a list of tags based on the array in the vue instance using loop  -->
+            <div class="card h-100 rounded-4" :class="[lesson.spaces == 0 ? 'opacity-50' : '']">
+              <div class="card-body d-flex">
+                <!-- courses details -->
+                <div class="d-flex flex-column">
+                  <h5 class="card-title">{{lesson.subject}}</h5>
+                  <h6 class="card-subtitle mb-2 text-body-secondary"> &euro; {{lesson.price}}</h6>
+                  <p class="card-text">
+                    <!-- location and available spaces -->
+                    <span class="badge text-bg-light fw-normal">{{lesson.location}}</span>
+                    <span class="badge text-bg-light fw-normal">
+                      {{lesson.spaces}} spaces
+                    </span>
+                  </p>
+                 <!--  sections for buying and removing buttons from the cart -->
+              <section>
+                <div class="d-flex gap-2">
+                  <button @click="addToCart(lesson)" :disabled="!canAddToCart(lesson)"
+                      class="mt-auto btn btn-sm rounded-4 buy-now-button bn5" data-mdb-ripple-init data-mdb-ripple-color="dark"
+                      :class="`btn-outline-${ cartItemCount(lesson.id) > 0 ? 'danger' : 'primary'}`">
+                      Buy now
+                      <span v-if="cartItemCount(lesson.id) > 0">({{cartItemCount(lesson.id)}})</span>
+                  </button>
+              </div>
+            </section>
+            <!-- courses rating and icon -->
+                </div>
+                <div :class="`ms-auto text-${lesson.color}`">
+                  <!-- Display rating -->
+                <div v-if="lesson.rating">
+                  <template v-for="i in 5">
+                      <i :class="['fa', 'fa-star', lesson.rating >= i ? 'text-warning' : 'text-secondary']"></i>
+                  </template>
+              </div>
+             <!--  course icon -->
+                  <i class="fa-3x" :class="lesson.icon"></i>
+                 
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+        <!-- Alert when no lessons found -->
+        <div v-if="lessons.length == 0" class="alert alert-danger mt-4" role="alert">
+          No lessons found.
+        </div>
+        <!-- End of List of Lessons -->
+      </div>
+      <!-- End of Lessons Page -->
+
+      <!-- Shopping Cart and Checkout Page -->
+      <div v-else>
+        <h1 class="shop">Shopping Cart</h1>
+        <div v-if="cart.length > 0">
+          <div class="table-responsive">
+              <table class="table align-middle table-hover">
+                <!-- table headers -->
+                  <thead>
+                      <tr>
+                          <th>#</th>
+                          <th>Course</th>
+                          <th>Price</th>
+                          <th>Quantity</th>
+                          <th>Total</th>
+                          <th>Action</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                    <!-- cart items -->
+                      <tr v-for="(lesson, index) in cartDetails" :key="lesson.id">
+                          <td>{{ index + 1 }}</td>
+                          <td>
+                              <p class="mb-0">{{ lesson.subject }}</p>
+                              <p class="mb-0 small text-muted">{{ lesson.location }}</p>
+                          </td>
+                          <td>&euro; {{ lesson.price }}</td>
+                          <td>{{ lesson.quantity }}</td>
+                          <td>&euro; {{ lesson.total }}</td>
+                          <td>
+                            <!-- remove from the cart btn -->
+                              <button @click="removeFromCart(lesson)" class="btn btn-sm btn-outline-danger rounded-4 bn5"
+                                  data-mdb-ripple-init data-mdb-ripple-color="dark">
+                                  Remove
+                              </button>
+                          </td>
+                      </tr>
+                  </tbody>
+                 <!--  cart total -->
+                  <tfoot class="fs-5">
+                      <tr>
+                          <td colspan="4" class="text-end">Subtotal:</td>
+                          <td colspan="2">&euro; {{ cartTotal }}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="4" class="text-end">Tax (VAT 20%):</td>
+                          <td colspan="2">&euro; {{ (cartTotal * 0.2).toFixed(2) }}</td>
+                      </tr>
+                      <tr>
+                          <td colspan="4" class="text-end fw-bold">Total:</td>
+                          <td colspan="2" class="fw-bold">&euro; {{ (cartTotal * 1.2).toFixed(2) }}</td>
+                      </tr>
+                  </tfoot>
+              </table>
+          </div>
+       
+      </div>
+   
+          <!-- checkout form -->
+          <h2 class="bn-32 bn32">Checkout</h2>
+          <p class="text-muted mb-4">Please fill form.</p>
+          <form @submit.prevent="submitOrder" class="col-md-8 col-lg-5">
+            <div class="mb-3">
+                <div class="form-floating">
+                    <input v-model="user.name" @input="validateUserName" type="text" id="username" class="form-control"
+                        placeholder="username" autocomplete="off"
+                        :class="[!user.isNameValid && user.name ? 'border-danger' : '']" />
+                    <label for="username">Name</label>
+                </div>
+                <!-- error message for invalid name -->
+                <span v-if="!user.isNameValid && user.name" class="small text-danger">
+                </span>
+            </div>
+            <!-- phone input field -->
+            <div class="mb-3">
+                <div class="form-floating">
+                    <input v-model="user.phone" @input="validateUserPhone" type="tel" id="phone" class="form-control"
+                        placeholder="phone" autocomplete="off"
+                        :class="[!user.isPhoneValid && user.phone ? 'border-danger' : '']" />
+                    <label for="phone">Phone</label>
+                </div>
+                <!-- error message for invalid phone -->
+                <span v-if="!user.isPhoneValid && user.phone" class="small text-danger">
+                    Phone must only contain numbers in the format XXX-XXX-XXXX.
+                </span>
+            </div>
+           <!--  checkout btn -->
+            <button :disabled="!(user.isNameValid && user.isPhoneValid)" type="submit" class="btn btn-lg btn-primary bn5"
+                data-mdb-modal-init data-mdb-target="#checkoutResult" data-mdb-ripple-init>
+                Checkout
+            </button>
+        </form>
+          <!-- Checkout completion message -->
+          <div class="modal fade" id="checkoutResult" tabindex="-1" data-mdb-backdrop="static"
+          data-mdb-keyboard="false">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-body text-center">
+                <div v-if="user.isNameValid && user.isPhoneValid">
+                  <i class="fa-light fa-circle-check fa-5x text-success my-4"></i>
+                  <h3>Lessons Submitted Successfully!</h3>
+                </div>
+                <div v-else>
+                  <i class="fa-light fa-circle-x fa-5x text-danger my-4"></i>
+                  <h3>Order Failed!</h3>
+                </div>
+              </div>
+              <!-- btn to close modal -->
+              <div class="modal-footer border-0">
+                <button type="button" class="btn btn-primary mx-auto" data-mdb-dismiss="modal" data-mdb-ripple-init>
+                  Okay
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        </div>
+        <div v-else class="text-center">
+          <p class="fs-5">Your cart is empty.</p>
+          <button @click="showCheckout" class="btn btn-lg btn-outline-primary rounded-4" data-mdb-ripple-init
+            data-mdb-ripple-color="dark">
+          </button>
+        </div>
+      </div>
+      <!-- End of Shopping Cart and Checkout Page -->
+    </div>
+
+    <!-- Shopping Cart Button -->
+    <div id="cart" >
+      <button @click="showCheckout" type="button" class="btn btn-lg position-relative btn-shockwave square-cart-btn"
+        :class="[cart.length > 0 ? 'btn-primary' : 'btn-secondary', cart.length > 0 && showLessons ? 'is-active' : '']"
+        :disabled="cart.length == 0 && showLessons" data-mdb-ripple-init>
+        <i class="fa-solid" :class="[showLessons ? 'fa-solid fa-cart-shopping' : 'fa-share fa-flip-horizontal']"></i>
+        <span v-if="showLessons" class="position-relative badge rounded-pill badge-danger" v-text="cart.length"></span>
+      </button>
+    </div>
+  </main>
+  <hr>
+  <!-- Bootstrap and Javascript links  -->
+  <!-- <script src="assets/mdbootstrap.7.1.0/mdb.umd.js"></script> -->
+  <script src="assets/script.js"></script>
+</body>
+</html>

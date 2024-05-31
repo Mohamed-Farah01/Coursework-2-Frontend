@@ -1,0 +1,245 @@
+@import url('https://fonts.googleapis.com/css2?family=Satisfy&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:slnt,wght@-10..0,100..900&display=swap');
+
+.heading:hover{
+  color: #59D5E0;
+}
+
+body{
+  color: #4D869C;
+  background-color: #EEF7FF;
+}
+ /* footer design */
+
+.shop:hover{
+  color: #7AB2B2;
+}
+
+.square-cart-btn{
+  border-radius: 0 !important;
+}
+
+label{
+  color: #000;
+}
+
+
+
+.bn32 {
+  border-color: #ffffff;
+  padding: 0.6em 2.3em;
+  cursor: pointer;
+  font-size: 1em;
+  color: #4D869C;
+  background-image: linear-gradient(45deg, transparent 50%, #000000 50%);
+  background-position: 25%;
+  background-size: 400%;
+  -webkit-transition: background 500ms ease-in-out, color 500ms ease-in-out;
+  transition: background 500ms ease-in-out, color 500ms ease-in-out;
+}
+
+.bn32:hover {
+  color: #ffffff;
+  background-position: 100%;
+}
+.satisfy-regular {
+  font-family: "Satisfy", cursive;
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+
+.navbar-title {
+  font-size: 1.5rem;
+  transition: color 0.3s;
+}
+
+
+.hover-color:hover {
+  color: #59D5E0;; /* h1 hovering style */
+}
+
+* {
+  font-family: "Inter", sans-serif;
+}
+
+*:focus-visible,
+*:focus,
+.form-select {
+  box-shadow: none !important;
+}
+
+.fw-bolder {
+  font-weight: 900 !important;
+}
+
+.text-purple {
+  --mdb-text-opacity: 1;
+  color: rgba(111, 66, 193, var(--mdb-text-opacity)) !important;
+}
+
+.text-indigo {
+  --mdb-text-opacity: 1;
+  color: rgba(102, 16, 242, var(--mdb-text-opacity)) !important;
+}
+
+.text-orange {
+  --mdb-text-opacity: 1;
+  color: rgba(253, 126, 20, var(--mdb-text-opacity)) !important;
+}
+
+.text-pink {
+  --mdb-text-opacity: 1;
+  color: rgba(214, 51, 132, var(--mdb-text-opacity)) !important;
+}
+
+.btn:disabled {
+  cursor: not-allowed;
+  pointer-events: all;
+}
+
+.navbar img {
+  width: 60px;
+  height: 60px;
+}
+
+[v-cloak] {
+  display: none;
+}
+
+#cart {
+  position: fixed;
+  top: 7%;
+  right: 5%;
+}
+
+#cart .btn {
+  border-radius: 50% !important;
+  height: 70px;
+  width: 70px;
+}
+
+#cart .btn .badge {
+  left: 65%;
+  top: -5px;
+}
+
+.table tbody tr td:first-of-type,
+.table tbody tr td:last-of-type {
+  width: 0;
+}
+
+.btn-shockwave.is-active {
+  animation: shockwaveJump 1s ease-out infinite;
+}
+
+.btn-shockwave.is-active:after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  animation: shockwave 1s .65s ease-out infinite;
+}
+
+.btn-shockwave.is-active:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  border-radius: 50%;
+  animation: shockwave 1s .5s ease-out infinite;
+}
+
+.bn632-hover.bn26 {
+  background-image: linear-gradient(
+    to right,
+    #25aae1,
+    #4481eb,
+    #04befe,
+    #3f86ed
+  );
+  box-shadow: 0 4px 15px 0 rgba(65, 132, 234, 0.75);
+}
+
+
+.bn5 {
+  padding: 0.6em 2em;
+  border: none;
+  outline: none;
+  color: rgb(255, 255, 255);
+  background: #111;
+  cursor: pointer;
+  position: relative;
+  z-index: 0;
+  border-radius: 10px;
+}
+
+.bn5:before {
+  content: "";
+  background: linear-gradient(
+    45deg,
+    #ff0000,
+    #ff7300,
+    #fffb00,
+    #48ff00,
+    #00ffd5,
+    #002bff,
+    #7a00ff,
+    #ff00c8,
+    #ff0000
+  );
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  background-size: 400%;
+  z-index: -1;
+  filter: blur(5px);
+  width: calc(100% + 4px);
+  height: calc(100% + 4px);
+  animation: glowingbn5 20s linear infinite;
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+  border-radius: 10px;
+}
+
+@keyframes glowingbn5 {
+  0% {
+    background-position: 0 0;
+  }
+  50% {
+    background-position: 400% 0;
+  }
+  100% {
+    background-position: 0 0;
+  }
+}
+
+.bn5:active {
+  color: #000;
+}
+
+.bn5:active:after {
+  background: transparent;
+}
+
+.bn5:hover:before {
+  opacity: 1;
+}
+
+.bn5:after {
+  z-index: -1;
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #191919;
+  left: 0;
+  top: 0;
+  border-radius: 10px;
+}
